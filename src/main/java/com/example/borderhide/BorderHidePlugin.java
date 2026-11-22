@@ -85,14 +85,14 @@ public class BorderHidePlugin extends JavaPlugin implements TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length == 0 || args.equalsIgnoreCase("status")) {
+        if (args.length == 0 || args[0].equalsIgnoreCase("status")) {
             sender.sendMessage(ChatColor.GOLD + "[BorderHide] " + ChatColor.WHITE
                 + "Status: " + (enabled ? ChatColor.GREEN + "ON" : ChatColor.RED + "OFF")
                 + ChatColor.WHITE + " | Buffer: " + ChatColor.AQUA + bufferChunks + " chunk(s)");
             return true;
         }
 
-        switch (args.toLowerCase()) {
+        switch (args[0].toLowerCase()) {
             case "on", "enable" -> {
                 enabled = true;
                 getConfig().set("enabled", true);
@@ -113,9 +113,9 @@ public class BorderHidePlugin extends JavaPlugin implements TabCompleter {
                     return true;
                 }
                 try {
-                    updateBuffer(sender, Integer.parseInt(args));
+                    updateBuffer(sender, Integer.parseInt(args[1]));
                 } catch (NumberFormatException e) {
-                    sender.sendMessage(ChatColor.RED + "Invalid number: " + args);
+                    sender.sendMessage(ChatColor.RED + "Invalid number: " + args[1]);
                 }
             }
             default -> sender.sendMessage(ChatColor.RED + "Usage: /borderhide <on|off|add|sub|buffer <chunks>|status>");
@@ -128,7 +128,7 @@ public class BorderHidePlugin extends JavaPlugin implements TabCompleter {
         if (args.length == 1) {
             return List.of("on", "off", "add", "sub", "buffer", "status");
         }
-        if (args.length == 2 && args.equalsIgnoreCase("buffer")) {
+        if (args.length == 2 && args[0].equalsIgnoreCase("buffer")) {
             return List.of("-1", "0", "1", "2");
         }
         return List.of();
