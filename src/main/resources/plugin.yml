@@ -3,3 +3,12 @@ version: 1.0.0
 main: com.example.borderhide.BorderHidePlugin
 api-version: '26.3'
 depend: [packetevents]
+commands:
+  borderhide:
+    description: Toggle BorderHide or adjust the outside chunk buffer.
+    usage: /borderhide <on|off|add|sub|buffer <chunks>|status>
+    permission: borderhide.admin
+permissions:
+  borderhide.admin:
+    description: Allows configuring BorderHide
+    default: op
