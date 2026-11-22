@@ -48,10 +48,10 @@ public class BorderHidePlugin extends JavaPlugin implements TabCompleter {
                     if (player == null) return;
 
                     WrapperPlayServerChunkData packet = new WrapperPlayServerChunkData(event);
-                    int chunkMinX = packet.getColumn().getX() << 4;
-                    int chunkMaxX = chunkMinX + 15;
-                    int chunkMinZ = packet.getColumn().getZ() << 4;
-                    int chunkMaxZ = chunkMinZ + 15;
+                    double chunkMinX = packet.getColumn().getX() << 4;
+                    double chunkMaxX = chunkMinX + 16.0;
+                    double chunkMinZ = packet.getColumn().getZ() << 4;
+                    double chunkMaxZ = chunkMinZ + 16.0;
 
                     WorldBorder border = player.getWorld().getWorldBorder();
                     double half = (border.getSize() / 2.0) + (bufferChunks * 16.0);
@@ -60,7 +60,7 @@ public class BorderHidePlugin extends JavaPlugin implements TabCompleter {
                     double minZ = border.getCenter().getZ() - half;
                     double maxZ = border.getCenter().getZ() + half;
 
-                    if (chunkMaxX < minX || chunkMinX > maxX || chunkMaxZ < minZ || chunkMinZ > maxZ) {
+                    if (chunkMaxX <= minX || chunkMinX >= maxX || chunkMaxZ <= minZ || chunkMinZ >= maxZ) {
                         event.setCancelled(true);
                     }
                 }
@@ -85,14 +85,14 @@ public class BorderHidePlugin extends JavaPlugin implements TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length == 0 || args[0].equalsIgnoreCase("status")) {
+        if (args.length == 0 || args.equalsIgnoreCase("status")) {
             sender.sendMessage(ChatColor.GOLD + "[BorderHide] " + ChatColor.WHITE
                 + "Status: " + (enabled ? ChatColor.GREEN + "ON" : ChatColor.RED + "OFF")
                 + ChatColor.WHITE + " | Buffer: " + ChatColor.AQUA + bufferChunks + " chunk(s)");
             return true;
         }
 
-        switch (args[0].toLowerCase()) {
+        switch (args.toLowerCase()) {
             case "on", "enable" -> {
                 enabled = true;
                 getConfig().set("enabled", true);
@@ -113,9 +113,9 @@ public class BorderHidePlugin extends JavaPlugin implements TabCompleter {
                     return true;
                 }
                 try {
-                    updateBuffer(sender, Integer.parseInt(args[1]));
+                    updateBuffer(sender, Integer.parseInt(args));
                 } catch (NumberFormatException e) {
-                    sender.sendMessage(ChatColor.RED + "Invalid number: " + args[1]);
+                    sender.sendMessage(ChatColor.RED + "Invalid number: " + args);
                 }
             }
             default -> sender.sendMessage(ChatColor.RED + "Usage: /borderhide <on|off|add|sub|buffer <chunks>|status>");
@@ -128,7 +128,7 @@ public class BorderHidePlugin extends JavaPlugin implements TabCompleter {
         if (args.length == 1) {
             return List.of("on", "off", "add", "sub", "buffer", "status");
         }
-        if (args.length == 2 && args[0].equalsIgnoreCase("buffer")) {
+        if (args.length == 2 && args.equalsIgnoreCase("buffer")) {
             return List.of("-1", "0", "1", "2");
         }
         return List.of();
