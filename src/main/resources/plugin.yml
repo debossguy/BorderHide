@@ -1,5 +1,5 @@
 name: BorderHide
 version: 1.0.0
 main: com.example.borderhide.BorderHidePlugin
-api-version: '1.21'
-depend: [PacketEvents]
+api-version: '26.3'
+depend: [packetevents]
